@@ -37,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Toolbar title clicked", Toast.LENGTH_SHORT).show();
-                startActivityForResult(intent, 1);
+                                startActivityForResult(intent, 1);
             }
         });
 
