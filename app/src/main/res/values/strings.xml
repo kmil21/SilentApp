@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">SilentApp</string>
+    <string name="action_settings">Settings</string>
+    <string name="Pick_Start_Time">Start Silent Time</string>
+    <string name="Pick_End_Time">End Silent Time</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="WeekdaysCardTitle">Weekdays when silent works</string>
+    <string name="vibrate_only">Vibrate Only </string>
+    <string name="S_all">All Days</string>
+</resources>

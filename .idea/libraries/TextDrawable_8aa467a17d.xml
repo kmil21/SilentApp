@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="TextDrawable-8aa467a17d">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.afollestad/TextDrawable/8aa467a17d/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.afollestad/TextDrawable/8aa467a17d/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

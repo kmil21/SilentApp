@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="weekdays-buttons-bar-v0.2-alpha">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.github.TouchBoarder/weekdays-buttons-bar/v0.2-alpha/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.github.TouchBoarder/weekdays-buttons-bar/v0.2-alpha/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
