@@ -8,4 +8,5 @@
     <string name="WeekdaysCardTitle">Weekdays when silent works</string>
     <string name="vibrate_only">Vibrate Only </string>
     <string name="S_all">All Days</string>
+    <string name="add_alarm">Add new silent</string>
 </resources>
