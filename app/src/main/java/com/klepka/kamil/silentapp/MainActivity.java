@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     WeekdaysDataSource weekdaysDataSource;
     Toolbar toolbar,toolbar2;
     Intent intent;
+    Button toolbarbtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,12 +37,8 @@ public class MainActivity extends AppCompatActivity {
        getSupportActionBar().setTitle("Dodaj nowy");
        // getSupportActionBar().setIcon(R.drawable.ic_add_alarm_black_48dp);
         intent = new Intent(this, SilentPicker.class);
-        toolbar2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                                startActivityForResult(intent, 1);
-            }
-        });
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +57,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void AddNewSilent(View view)
+    {
 
+    }
 
 
     @Override

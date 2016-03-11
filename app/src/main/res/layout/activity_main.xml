@@ -27,8 +27,9 @@
             android:id="@+id/toolbar2"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:background="@android:color/holo_blue_bright"
-            style="@style/Widget.AppCompat.Button"
+            android:background="@drawable/button_normal"
+            style="Theme.AppCompat.Light.DarkActionBar"
+
 
 
             >
@@ -38,17 +39,18 @@
                 android:layout_height="match_parent"
                 android:paddingTop="5dp"
                 >
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/toolbar_title"
-                android:gravity="center"
-                android:text="@string/add_alarm"
-                android:layout_gravity="center"
-                android:textAppearance="@android:style/TextAppearance.Medium"
-                android:paddingTop="10dp"
-                android:paddingRight="25dp"
-               />
+<android.support.v7.widget.AppCompatButton
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:text="@string/add_alarm"
+    android:gravity="center"
+    android:textAppearance="@android:style/TextAppearance.Medium"
+    android:background="@drawable/button_normal"
+    android:id="@+id/toolbarbtn"
+    style="@style/Widget.AppCompat.Button.Borderless"
+
+
+    />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
