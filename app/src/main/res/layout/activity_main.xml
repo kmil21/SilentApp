@@ -27,8 +27,9 @@
             android:id="@+id/toolbar2"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:background="@color/red"
+            android:background="@android:color/holo_blue_bright"
             style="@style/Widget.AppCompat.Button"
+
 
             >
             <RelativeLayout
