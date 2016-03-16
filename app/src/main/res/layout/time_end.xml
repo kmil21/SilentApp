@@ -15,14 +15,13 @@
         style="@style/StyleCardTitle"
         android:id="@+id/bar2"
         android:text="@string/Pick_End_Time"
-        android:textSize="23dp"
+        android:textSize="23sp"
         android:textColor="@color/lemon"/>
 
     <TimePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/timePickerEnd"
-        android:timePickerMode="spinner"
         android:layout_gravity="center_horizontal"
         android:paddingTop="40dp"
         android:paddingBottom="25dp" />

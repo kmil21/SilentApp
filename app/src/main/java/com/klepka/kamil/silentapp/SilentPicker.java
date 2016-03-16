@@ -46,7 +46,7 @@ public class SilentPicker extends AppCompatActivity implements WeekdaysDataSourc
         start.setIs24HourView(is24Hour);
         TimePicker end = (TimePicker) findViewById(R.id.timePickerEnd);
        end.setIs24HourView(is24Hour);
-
+/*
         int screenSize = getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK;
 
@@ -54,29 +54,11 @@ public class SilentPicker extends AppCompatActivity implements WeekdaysDataSourc
         switch(screenSize) {
             case Configuration.SCREENLAYOUT_SIZE_LARGE:
                 toastMsg = "Large screen";
-                start.setScaleX(LargeScaleX);
-                start.setScaleY(LargeScaleY);
-                end.setScaleX(LargeScaleX);
-                end.setScaleY(LargeScaleY);
-                txt = (TextView)findViewById(R.id.bar1);
-                txt.setTextSize(LargeTxt);
-                txt = (TextView)findViewById(R.id.bar2);
-                txt.setTextSize(LargeTxt);
-                txt = (TextView)findViewById(R.id.bar3);
-                txt.setTextSize(LargeTxt);
+
                 break;
             case Configuration.SCREENLAYOUT_SIZE_NORMAL:
                 toastMsg = "Normal screen";
-                start.setScaleX(NormalScaleX);
-                start.setScaleY(NormalScaleY);
-                end.setScaleX(NormalScaleX);
-                end.setScaleY(NormalScaleY);
-                txt = (TextView)findViewById(R.id.bar1);
-                txt.setTextSize(NormalTxt);
-                txt = (TextView)findViewById(R.id.bar2);
-                txt.setTextSize(NormalTxt);
-                txt = (TextView)findViewById(R.id.bar3);
-                txt.setTextSize(NormalTxt);
+
                 break;
             case Configuration.SCREENLAYOUT_SIZE_SMALL:
                 toastMsg = "Small screen";
@@ -84,6 +66,7 @@ public class SilentPicker extends AppCompatActivity implements WeekdaysDataSourc
             default:
                 toastMsg = "Screen size is neither large, normal or small";
         }
+        */
 
         if (savedInstanceState != null) {
             // Restore the weekdaysDataSource state, save a reference to weekdaysDataSource.
