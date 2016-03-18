@@ -1,7 +1,5 @@
 package com.klepka.kamil.silentapp;
 
-import static com.klepka.kamil.silentapp.Constants.FIRST_COLUMN;
-import static com.klepka.kamil.silentapp.Constants.SECOND_COLUMN;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,14 +23,13 @@ import java.util.List;
  */
 public class ListViewAdapter extends ArrayAdapter<RowItem>{
 
-    public ArrayList<HashMap<String, String>> list;
     Activity activity;
-    List<RowItem> rowItems;
+    List<RowItem> data;
     Context context;
     int layoutResourceId;
-    RowItem data[] = null;
+   // RowItem data[] = null;
 
-    public  ListViewAdapter(Context context,int layoutResourceId, RowItem[] data)
+    public  ListViewAdapter(Context context,int layoutResourceId, ArrayList<RowItem> data)
     {
 
         super(context,layoutResourceId,data);
@@ -39,7 +37,6 @@ public class ListViewAdapter extends ArrayAdapter<RowItem>{
        // this.activity = activity;
       this.context = context;
         this.data =data;
-        Log.d("Krok 3", "tutaj");
     }
 
 
@@ -58,7 +55,6 @@ public class ListViewAdapter extends ArrayAdapter<RowItem>{
 
        ViewHolder holder = null;
 
-        Log.d("Krok 4", "tutaj");
 
         if(convertView == null)
         {
@@ -69,7 +65,6 @@ public class ListViewAdapter extends ArrayAdapter<RowItem>{
             holder.txtDay = (TextView) convertView.findViewById(R.id.TextDay);
             holder.imgVolum = (ImageView) convertView.findViewById(R.id.activAlarm);
             convertView.setTag(holder);
-            Log.d("dupa","tutaj");
         }
         else {
             holder=(ViewHolder) convertView.getTag();
@@ -77,16 +72,23 @@ public class ListViewAdapter extends ArrayAdapter<RowItem>{
 
         //RowItem rowItem = (RowItem) getItem(position);
 
-        RowItem Item = data[position];
+       // RowItem Item = data[position];
+        RowItem Item = data.get(position);
         /*
         HashMap<String, String> map=list.get(position);
         holder.txtTime.setText(map.get(FIRST_COLUMN));
         holder.txtTime.setText(map.get(SECOND_COLUMN));
         holder.imgVolum.setImageResource(R.drawable.ic_volume_up_black_48dp);
         */
-        holder.txtTime.setText(Item.getDesc());
+        Integer imgsrc = Item.getImageId();
+        holder.txtDay.setText(Item.getDesc());
         holder.txtTime.setText(Item.getTitle());
         holder.imgVolum.setImageResource(Item.getImageId());
+
+        holder.imgVolum.setTag(R.id.ItemImgSrc, imgsrc);
+        holder.imgVolum.setTag(R.id.ItemPosition,position);
+
         return convertView;
     }
+
 }

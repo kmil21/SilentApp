@@ -6,11 +6,12 @@
     android:layout_height="match_parent"
 
 
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingTop="5dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.klepka.kamil.silentapp.MainActivity"
     tools:showIn="@layout/activity_main"
-    android:background="@android:color/holo_green_dark">
+    android:background="@android:drawable/screen_background_light"
+    >
 
 
     <ListView
@@ -19,5 +20,6 @@
         android:id="@+id/SilentsList"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:background="@android:drawable/screen_background_light"/>
 </RelativeLayout>

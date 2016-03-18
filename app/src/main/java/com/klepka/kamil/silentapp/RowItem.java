@@ -1,15 +1,17 @@
 package com.klepka.kamil.silentapp;
 
+import android.text.Spannable;
+
 /**
  * Created by Kamil on 2016-03-16.
  */
 public class RowItem {
     private int imageId;
     private String title;
-    private String desc;
+    private Spannable desc;
 
 
-    public RowItem(int imageId, String title, String desc) {
+    public RowItem(int imageId, String title, Spannable desc) {
         this.imageId = imageId;
         this.title = title;
         this.desc = desc;
@@ -23,11 +25,11 @@ public class RowItem {
         this.imageId = imageId;
     }
 
-    public String getDesc() {
+    public Spannable getDesc() {
         return desc;
     }
 
-    public void setDesc(String desc) {
+    public void setDesc(Spannable desc) {
         this.desc = desc;
     }
 

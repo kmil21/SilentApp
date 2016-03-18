@@ -1,22 +1,29 @@
 package com.klepka.kamil.silentapp;
 
-import static com.klepka.kamil.silentapp.Constants.FIRST_COLUMN;
-import static com.klepka.kamil.silentapp.Constants.SECOND_COLUMN;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -26,6 +33,8 @@ import com.touchboarder.weekdaysbuttons.WeekdaysDataSource;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,8 +42,14 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar,toolbar2;
     Intent intent;
     ListView listView;
-    private   ArrayList<RowItem> list;
+    private   ArrayList<RowItem> list = new ArrayList<RowItem>();;
+    private ListViewAdapter adapter;
     Context context ;
+    private String days = "P\t\tW\t\tŚ\t\tC\t\tP\t\tS\t\tN";
+    private String time = "From: \t12:30 \n\n\t\t\tTo: \t15:00";
+    String TestID;
+    private Boolean[] activeAlarms= new Boolean[9] ;
+    private int SilentID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
        toolbar2=(Toolbar) findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar2);
-       getSupportActionBar().setTitle("Dodaj nowy");
        // getSupportActionBar().setIcon(R.drawable.ic_add_alarm_black_48dp);
         intent = new Intent(this, SilentPicker.class);
 
@@ -55,64 +69,125 @@ public class MainActivity extends AppCompatActivity {
         toolbar2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(intent, 1);
+               // startActivityForResult(intent, 1);
+                addItems();
             }
         });
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
        // startActivityForResult(new Intent(this, SilentPicker.class), 1);
 
-        RowItem RowData[] = new RowItem[]
-                {
-                        new RowItem(R.drawable.ic_volume_off_black_18dp,"Dupa", "Cyce"),
-        new RowItem(R.drawable.ic_volume_off_black_18dp,"Dupa2", "Cyce"),
-        new RowItem(R.drawable.ic_volume_off_black_18dp,"Dupa3", "Cyce")
-                };
-        Log.d("Krok 1", "tutaj");
-        listView=(ListView) findViewById(R.id.SilentsList);
-      //  silentsList();
-        ListViewAdapter adapter=new ListViewAdapter(this,R.layout.column_row,RowData);
-        Log.d("Krok 2", "tutaj");
-        listView.setAdapter(adapter);
+
+
+        Spannable span = new SpannableString(days);
+
+        for ( int i = 0, len = days.length(); i < len; i++ ){
+            span.setSpan(new ForegroundColorSpan(getRandomColor()), i, i+1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+
+            listView = (ListView) findViewById(R.id.SilentsList);
+
+            adapter = new ListViewAdapter(this, R.layout.column_row, list);
+
+            listView.setAdapter(adapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // Toast.makeText(getApplicationContext(),
+                    //    parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                    TestID = Integer.toString(position);
+                }
+            });
+
 
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            list = (ArrayList<RowItem>) savedInstanceState.getSerializable("List");
+            ListViewAdapter adapter = new ListViewAdapter(this,R.layout.column_row,list );
+            listView = (ListView) findViewById(R.id.SilentsList);
+            listView.setAdapter(adapter);
+
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        outState.putSerializable("List", list);
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("ListV", listView.onSaveInstanceState());
+
+    }
+
+    //METHOD WHICH WILL HANDLE DYNAMIC INSERTION
+    public void addItems() {
+        silentsList();
+        adapter.notifyDataSetChanged();
+    }
+    public void deleteItems() {
+        list.remove(2);
+        adapter.notifyDataSetChanged();
+    }
+
+    private int getRandomColor(){
+        Random rnd = new Random();
+        return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+    }
 
     private void silentsList()
     {
-        int id = R.drawable.ic_volume_off_black_48dp;
-        list =new ArrayList<RowItem>();
-        RowItem items = new RowItem(R.drawable.ic_volume_off_black_48dp,"Dupa", "Cyce");
+
+        RowItem items = new RowItem(R.drawable.ic_volume_up_black_18dp,time,SelectedDays(days) );
+        activeAlarms[SilentID] = true;
         list.add(items);
-       /* HashMap<String,String> temp = new HashMap<String,String>();
-            temp.put(FIRST_COLUMN,"colored Notebook");
-            temp.put(SECOND_COLUMN,"By Nevneet");
-
-*/
-
-        RowItem items2 = new RowItem(R.drawable.ic_volume_off_black_48dp,"Dupa2", "Cyce2");
-        list.add(items2);
-        RowItem items3 = new RowItem(R.drawable.ic_volume_off_black_48dp,"Dupa3", "Cyce3");
-        list.add(items3);
-        RowItem items4 = new RowItem(R.drawable.ic_volume_off_black_48dp,"Dupa4", "Cyce4");
-        list.add(items4);
-        //list.add(items);
-
+        SilentID++;
     }
 
-    public void AddNewSilent(View view)
+    private  Spannable SelectedDays(String days)
     {
+        Spannable span = new SpannableString(days);
+
+        for ( int i = 0, len = days.length(); i < len; i++ ){
+
+            span.setSpan(new ForegroundColorSpan(getRandomColor()), i, i+1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        return span;
+    }
+
+    public void ActiveSilent(View view)
+    {
+        ImageView butn = (ImageView) view;
+
+        Integer resource = (Integer)butn.getTag(R.id.ItemImgSrc);
+        Integer tmp =(Integer) butn.getTag(R.id.ItemPosition);
+        TestID = Integer.toString((Integer) butn.getTag(R.id.ItemPosition));
+        if (resource == R.drawable.ic_volume_up_black_18dp) {
+            butn.setImageResource(R.drawable.ic_volume_off_black_18dp);
+            butn.setTag(R.id.ItemImgSrc, R.drawable.ic_volume_off_black_18dp);
+            Toast.makeText(MainActivity.this,"Element klikniety:"+TestID,Toast.LENGTH_SHORT).show();
+            RowItem row = list.get(tmp);
+            row.setImageId(R.drawable.ic_volume_off_black_18dp);
+            list.set(tmp,row);
+            activeAlarms[tmp] = false;
+        }
+        else
+        {
+            butn.setImageResource(R.drawable.ic_volume_up_black_18dp);
+            butn.setTag(R.id.ItemImgSrc,R.drawable.ic_volume_up_black_18dp);
+            Toast.makeText(MainActivity.this,"Element klikniety:"+TestID,Toast.LENGTH_SHORT).show();
+            RowItem row = list.get(tmp);
+            row.setImageId(R.drawable.ic_volume_up_black_18dp);
+            list.set(tmp, row);
+            activeAlarms[tmp] = true;
+        }
 
     }
 
@@ -149,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
+                Toast.makeText(MainActivity.this,"Brak nowego alarmu",Toast.LENGTH_SHORT).show();
             }
 
         }
