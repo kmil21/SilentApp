@@ -14,4 +14,5 @@
     <color name="colorSecondaryText">#727272</color>
     <color name="red">#B70000</color>
     <color name="colorSecondaryText2">#B70000</color>
+    <color name="activColor">#39FF14</color>
 </resources>

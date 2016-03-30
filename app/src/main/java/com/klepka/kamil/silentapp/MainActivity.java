@@ -16,6 +16,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,11 +26,13 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.touchboarder.weekdaysbuttons.WeekdaysDataItem;
 import com.touchboarder.weekdaysbuttons.WeekdaysDataSource;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -45,11 +48,14 @@ public class MainActivity extends AppCompatActivity {
     private   ArrayList<RowItem> list = new ArrayList<RowItem>();;
     private ListViewAdapter adapter;
     Context context ;
-    private String days = "P\t\tW\t\tŚ\t\tC\t\tP\t\tS\t\tN";
-    private String time = "From: \t12:30 \n\n\t\t\tTo: \t15:00";
+   // private String days5 = "P\t\tW\t\tŚ\t\tC\t\tP\t\tS\t\tN";
+    private String days;
+    //private String time = "From: \t12:30 \n\n\t\t\tTo: \t15:00";
     String TestID;
     private Boolean[] activeAlarms= new Boolean[9] ;
     private int SilentID = 0;
+    private int currentposition;
+    private ArrayList<SilentInfo> SilentSettings = new ArrayList<SilentInfo>() ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,23 +75,17 @@ public class MainActivity extends AppCompatActivity {
         toolbar2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // startActivityForResult(intent, 1);
-                addItems();
+                startActivityForResult(intent, 1);
+                //addItems();
             }
         });
 
-
+    days = getResources().getString(R.string.DaysOfWeek);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
        // startActivityForResult(new Intent(this, SilentPicker.class), 1);
 
 
-
-        Spannable span = new SpannableString(days);
-
-        for ( int i = 0, len = days.length(); i < len; i++ ){
-            span.setSpan(new ForegroundColorSpan(getRandomColor()), i, i+1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
 
 
             listView = (ListView) findViewById(R.id.SilentsList);
@@ -104,36 +104,61 @@ public class MainActivity extends AppCompatActivity {
             });
 
 
+          registerForContextMenu(listView);
     }
+
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            list = (ArrayList<RowItem>) savedInstanceState.getSerializable("List");
-            ListViewAdapter adapter = new ListViewAdapter(this,R.layout.column_row,list );
-            listView = (ListView) findViewById(R.id.SilentsList);
-            listView.setAdapter(adapter);
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        Log.d("Test", "Wykonuje sie z tagie :" + v.getTag());
 
-        }
-        super.onRestoreInstanceState(savedInstanceState);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        currentposition = info.position;
+        menu.add(0, v.getId(),0, getString(R.string.edit));
+        menu.add(0, v.getId(), 0, getString(R.string.remove));
+
+
     }
 
+
+
+    private void editSilent(int SilentId) {
+        Log.d("Edit", "Wywołano edycje alarmu " + Integer.toString(SilentId));
+    }
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    public boolean onContextItemSelected(MenuItem item)
+    {
 
-        outState.putSerializable("List", list);
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("ListV", listView.onSaveInstanceState());
 
+        if (item.getTitle() == getString( R.string.edit)){editSilent(currentposition);}
+        else if(item.getTitle() == getString( R.string.remove)){deleteItems(currentposition);}
+        else {return false;}
+
+        return true;
     }
+
+
 
     //METHOD WHICH WILL HANDLE DYNAMIC INSERTION
-    public void addItems() {
-        silentsList();
+    public void addItems(SilentInfo setInforamtion) {
+
+        String Times ="From: \t";
+        Times+= Integer.toString(setInforamtion.getStartHour())+":"+Integer.toString(setInforamtion.getStartMin())+"\n\n\t\t\tTo:\t";
+        Times+=Integer.toString(setInforamtion.getEndHour())+":"+Integer.toString(setInforamtion.getEndMin());
+
+        //private String time = "From: \t12:30 \n\n\t\t\tTo: \t15:00";
+        RowItem items = new RowItem(R.drawable.ic_volume_up_black_18dp,Times,SelectedDays(days,setInforamtion.getDays()) );
+        //activeAlarms[SilentID] = true;
+        list.add(items);
+       // SilentID++;
+        //silentsList();
         adapter.notifyDataSetChanged();
+        Log.d("Test", "Wykonuje sie");
     }
-    public void deleteItems() {
-        list.remove(2);
+
+    public void deleteItems(int Dposition) {
+        list.remove(Dposition);
         adapter.notifyDataSetChanged();
     }
 
@@ -141,23 +166,37 @@ public class MainActivity extends AppCompatActivity {
         Random rnd = new Random();
         return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
     }
+    private int getActivColor(){
 
-    private void silentsList()
-    {
-
-        RowItem items = new RowItem(R.drawable.ic_volume_up_black_18dp,time,SelectedDays(days) );
-        activeAlarms[SilentID] = true;
-        list.add(items);
-        SilentID++;
+        return Color.parseColor("#39FF14");
     }
 
-    private  Spannable SelectedDays(String days)
+    private  Spannable SelectedDays(String days,boolean[] DaysActiv)
     {
         Spannable span = new SpannableString(days);
-
+        int k= 0;
+        // #39FF14 kolor zielony
         for ( int i = 0, len = days.length(); i < len; i++ ){
 
-            span.setSpan(new ForegroundColorSpan(getRandomColor()), i, i+1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (days.charAt(i) != '\t')
+            {
+               // Log.d("Tutaj","Jestem");
+                if (DaysActiv[k]) {
+                    span.setSpan(new ForegroundColorSpan(getActivColor()), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    k++;
+                    Log.d("Tutaj","Jestem "+ Integer.toString(k));
+                }
+                else
+                    k++;
+            }
+            else {
+                span.setSpan(new ForegroundColorSpan(Color.BLACK), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+               // Log.d("Tutaj", "Jestem 22");
+            }
+        }
+        for (int i= 0;i<span.length();i++)
+        {
+
         }
         return span;
     }
@@ -220,6 +259,36 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
+                boolean[] DaySet = new boolean[7];
+                String[] result= new String[11];
+                result[0] = data.getStringExtra("StartHour");
+                result[1] = data.getStringExtra("StartMin");
+                result[2] = data.getStringExtra("EndHour");
+                result[3] = data.getStringExtra("EndMin");
+                for (int i = 4;i<=10;i++)
+                {
+                    result[i]= data.getStringExtra("Day"+Integer.toString(i-3));
+                    if(result[i].equals("1"))
+                    {
+                        DaySet[i-4] = true;
+                       // Log.d("Tutaj","Jestem");
+                    }
+                    else
+                        DaySet[i-4] = false;
+                   // Log.d("Tutaj","Nie powinienem być");
+                }
+                String DaysTest = "";
+                Log.d("Godzina Start ",result[0]+":"+result[1]);
+                Log.d("Godzina Koniec ",result[2]+":"+result[3]);
+                for(int i=0;i<7;i++)
+                {
+                    DaysTest += result[i+4] + " , ";
+                }
+
+                Log.d("Dni ", DaysTest);
+
+                SilentInfo set = new SilentInfo(Integer.parseInt(result[0]),Integer.parseInt(result[2]),Integer.parseInt(result[1]),Integer.parseInt(result[3]),DaySet);
+                addItems(set);
 
             }
             if (resultCode == Activity.RESULT_CANCELED) {

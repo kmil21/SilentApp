@@ -9,7 +9,9 @@
     <string name="vibrate_only">Vibrate Only </string>
     <string name="S_all">All Days</string>
     <string name="add_alarm">Add new silent</string>
-
+    <string name="edit">Edit silent</string>
+    <string name="remove">Remove silent</string>
+    <string name="DaysOfWeek">M\t\tT\t\tW\t\tT\t\tF\t\tS\t\tS</string>
     <item type="id" name="ItemPosition"/>
     <item type="id" name="ItemImgSrc"/>
 

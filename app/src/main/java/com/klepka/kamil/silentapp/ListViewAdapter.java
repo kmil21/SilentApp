@@ -84,7 +84,8 @@ public class ListViewAdapter extends ArrayAdapter<RowItem>{
         holder.txtDay.setText(Item.getDesc());
         holder.txtTime.setText(Item.getTitle());
         holder.imgVolum.setImageResource(Item.getImageId());
-
+        holder.txtDay.setTag("Edit");
+        holder.txtTime.setTag("Edit");
         holder.imgVolum.setTag(R.id.ItemImgSrc, imgsrc);
         holder.imgVolum.setTag(R.id.ItemPosition,position);
 
